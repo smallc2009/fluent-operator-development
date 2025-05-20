@@ -1,20 +1,20 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: tahi-linux-69r78-runner-s468z
-  namespace: gh-runners
+  name: tahi-linux
 spec:
   containers:
   - command:
-    - /home/runner/run.sh
+    - sleep 
+    - "36000"
     env:
     - name: DOCKER_HOST
       value: unix:///run/docker/docker.sock
-    image: ghcr.io/t3i-tahi-bss/actions-runner:v2.324.0
-    name: runner
-    resources: {}
+    image: ansonnz/fluent-operator-development:1.0
+    imagePullPolicy: IfNotPresent
+    name: fluent-operator-development
     volumeMounts:
-    - mountPath: /home/runner/_work
+    - mountPath: /home/work/_work
       name: work
     - mountPath: /run/docker
       name: dind-sock
@@ -23,35 +23,22 @@ spec:
     - dockerd
     - --host=unix:///run/docker/docker.sock
     - --group=$(DOCKER_GROUP_GID)
-    - --default-network-opt=bridge=com.docker.network.driver.mtu=1450
     env:
     - name: DOCKER_GROUP_GID
       value: "123"
     - name: DOCKER_IPTABLES_LEGACY
       value: "1"
     image: docker:dind
+    imagePullPolicy: IfNotPresent
     name: dind
-    resources: {}
     securityContext:
       privileged: true
     volumeMounts:
-    - mountPath: /home/runner/_work
+    - mountPath: /home/work/_work
       name: work
     - mountPath: /run/docker
       name: dind-sock
-    - mountPath: /home/runner/externals
-      name: dind-externals
-  initContainers:
-  - command:
-    - cp
-    - -r
-    - -v
-    - /home/runner/externals/.
-    - /home/runner/tmpDir/
-    image: ghcr.io/actions/actions-runner:latest
-    name: init-dind-externals
-    volumeMounts:
-    - mountPath: /home/runner/tmpDir
+    - mountPath: /home/work/externals
       name: dind-externals
   volumes:
   - emptyDir: {}

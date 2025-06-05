@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anson-fluent-operator-test
+  labels:
+    app: anson-fluent-operator-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: anson-fluent-operator-test
+  template:
+    metadata:
+      labels:
+        app: anson-fluent-operator-test
+    spec:
+      containers:
+        - name: fluent-operator-development
+          image: ansonnz/fluent-operator-development:1.0
+          imagePullPolicy: IfNotPresent
+          command: ["sleep", "36000"]
+          env:
+            - name: DOCKER_HOST
+              value: unix:///run/docker/docker.sock
+          volumeMounts:
+            - name: work
+              mountPath: /home/work/_work
+            - name: dind-sock
+              mountPath: /run/docker
+              readOnly: true
+        - name: dind
+          image: docker:dind
+          imagePullPolicy: IfNotPresent
+          args:
+            - dockerd
+            - --host=unix:///run/docker/docker.sock
+            - --group=$(DOCKER_GROUP_GID)
+          env:
+            - name: DOCKER_GROUP_GID
+              value: "123"
+            - name: DOCKER_IPTABLES_LEGACY
+              value: "1"
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: work
+              mountPath: /home/work/_work
+            - name: dind-sock
+              mountPath: /run/docker
+            - name: dind-externals
+              mountPath: /home/work/externals
+      volumes:
+        - name: work
+          emptyDir: {}
+        - name: dind-sock
+          emptyDir: {}
+        - name: dind-externals
+          emptyDir: {}

@@ -1,4 +1,4 @@
-FROM golang:1.23
+FROM golang:1.24
 
 ARG TARGETPLATFORM=amd64
 # Docker and Docker Compose arguments
@@ -79,4 +79,5 @@ RUN wget -O helm-amd64.tar.gz https://get.helm.sh/helm-v3.18.0-linux-amd64.tar.g
 RUN wget -O /usr/local/bin/kubectl https://dl.k8s.io/release/v1.28.0/bin/linux/amd64/kubectl && \
     chmod +x /usr/local/bin/kubectl
 RUN wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
-
+RUN wget -O /usr/local/bin/kubebuilder https://github.com/kubernetes-sigs/kubebuilder/releases/download/v3.1.0/kubebuilder_linux_amd64 && \
+    chmod +x /usr/local/bin/kubebuilder

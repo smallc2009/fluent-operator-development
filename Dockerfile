@@ -81,3 +81,9 @@ RUN wget -O /usr/local/bin/kubectl https://dl.k8s.io/release/v1.28.0/bin/linux/a
 RUN wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
 RUN wget -O /usr/local/bin/kubebuilder https://github.com/kubernetes-sigs/kubebuilder/releases/download/v3.1.0/kubebuilder_linux_amd64 && \
     chmod +x /usr/local/bin/kubebuilder
+RUN wget -O k9s_Linux_amd64.tar.gz https://github.com/derailed/k9s/releases/download/v0.50.6/k9s_Linux_amd64.tar.gz && \
+    tar -zxvf k9s_Linux_amd64.tar.gz && \
+    chmod +x k9s && \
+    mv k9s /usr/local/bin/k9s && \
+    rm -rf LICENSE && \
+    rm -rf README.md

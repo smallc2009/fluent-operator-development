@@ -13,7 +13,6 @@ This repository provides a ready-to-use development environment for building and
 1. **Deploy the Development Pod**
 
    Apply the deployment manifest to your Kubernetes cluster:
-
    ```
    kubectl apply -f fluent-operator-deployment.yaml
    ```
